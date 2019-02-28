@@ -6,73 +6,52 @@
 package main;
 
 /**
- *
  * @author Luca Mantica
  */
 public class SharedData {
-    /**
-     * @brief contatori
-     *
-     * @author Luca Mantica
-     */
-    private int numDIN, numDON, numDAN;
 
-     /**
-     * @brief costruttore vuoto
-     *
+    private final String[] souni = {"DIN", "DON", "DAN"};
+    private final boolean[] thRunning;
+    private final Schermo schermo;
+
+    /**
+     * @brief costruttore
      * @author Luca Mantica
      */
     public SharedData() {
-        numDIN = 0;
-        numDON = 0;
-        numDAN = 0;
-    }
-    
-    /**
-     * @brief incrementa la variabile
-     * @param threadName nome del Thread
-     *
-     * @author Luca Mantica
-     */
-    public void increase(String threadName) {
-        switch (threadName) {
-            case "DIN":
-                numDIN++;
-                break;
-            case "DON":
-                numDON++;
-                break;
-            case "DAN":
-                numDAN++;
-                break;
-            default:
-                break;
+        this.schermo = new Schermo();
+        this.thRunning = new boolean[3];
+        for (int i = 0; i < thRunning.length; i++) {
+            thRunning[i] = true;
         }
     }
 
-     /**
-     * @brief max tra i contatori
-     * @return numHighest nome del contatore
-     *
+    synchronized public Schermo GetSchermo() {
+        return schermo;
+    }
+
+    /**
+     * @brief controlla se i thread sono terminati
+     * @return true se tutti i thread sono terminati
      * @author Luca Mantica
      */
-    public String numHighest() {
-        int[] vect = new int[3];
-        vect[0] = numDIN;
-        vect[1] = numDON;
-        vect[2] = numDAN;
-        for (int i = 0; i < 2; i++) {
-            if (vect[i] > vect[i + 1]) {
-                int temp = vect[i];
-                vect[i] = vect[i + 1];
-                vect[1 + 1] = temp;
+    synchronized public boolean ThreadFiniti() {
+        boolean ris = true;
+        for (int i = 0; i < 3; i++) {
+            if (thRunning[i]) {
+                ris = false;
             }
         }
-        if (vect[2] == numDIN) {
-            return "DIN";
-        } else if (vect[2] == numDON) {
-            return "DON";
+        return ris;
+    }
+
+    synchronized void SetFinito(String sound) {
+        int ris = 0;
+        for (int i = 0; i < souni.length; i++) {
+            if (sound.equals(souni[i])) {
+                ris = i;
+            }
         }
-        return "DAN";
+        thRunning[ris] = false;
     }
 }
