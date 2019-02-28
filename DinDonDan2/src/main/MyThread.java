@@ -1,6 +1,7 @@
 package main;
 
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 
 /**
  * @brief la classe gestisce i thread
@@ -46,7 +47,7 @@ public class MyThread implements Runnable {
      *
      * @author Luca Mantica
      */
-    public MyThread(String sound, boolean yield, boolean delay,SharedData sharedData) {
+    public MyThread(String sound, boolean yield, boolean delay,SharedData sharedData, Semaphore thisTh, Semaphore nextTh ) {
         this.sound = sound;
         this.yield = yield;
         this.delay = delay;

@@ -1,6 +1,7 @@
 package main;
 
 import java.io.IOException;
+import java.util.concurrent.Semaphore;
 /**
  * @breif la classe gestisce l'entry point
  *
@@ -13,27 +14,29 @@ public class Main {
      * @author Luca Mantica
      */
     public static final SharedData sharedData = new SharedData();
-    
+    public static final Semaphore semThDin = new Semaphore(1);
+    public static final Semaphore semThDon = new Semaphore(0);
+    public static final Semaphore semThDan = new Semaphore(0);
     /**
      * @brief thread "DIN"
      *
      * @author Luca Mantica
      */
-    private static final Thread th1 = new Thread(new MyThread("DIN", true, false,sharedData));
+    private static final Thread th1 = new Thread(new MyThread("DIN", true, false,sharedData, semThDin, semThDon));
 
     /**
      * @brief thread "DON"
      *
      * @author Luca Mantica
      */
-    private static final Thread th2 = new Thread(new MyThread("DON", true, false,sharedData));
+    private static final Thread th2 = new Thread(new MyThread("DON", true, false,sharedData, semThDon, semThDan));
 
     /**
      * @brief thread "DAN"
      *
      * @author Luca Mantica
      */
-    private static final Thread th3 = new Thread(new MyThread("DAN", true, false,sharedData));
+    private static final Thread th3 = new Thread(new MyThread("DAN", true, false,sharedData, semThDan, semThDin));
 
     /**
      * @brief entry point
